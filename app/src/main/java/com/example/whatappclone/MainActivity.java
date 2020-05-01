@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
         // FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+//        id = mAuth.getCurrentUser().getUid();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
         // set toolbar
         mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
@@ -100,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void VerifyUserExistance() {
-        String currentId = mAuth.getCurrentUser().getUid();
+        private void VerifyUserExistance() {
+        final String currentId = mAuth.getCurrentUser().getUid();
         databaseReference.child(currentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
