@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     // Firebase
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
 
 
 
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        System.out.println(currentUser);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         // set toolbar
         mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
@@ -88,12 +95,31 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             SendUserToLoginActivity();
         }
+        else{
+            VerifyUserExistance();
+        }
     }
 
-    private void SendUserToLoginActivity() {
-        Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
-        startActivity(loginIntent);
+    private void VerifyUserExistance() {
+        String currentId = mAuth.getCurrentUser().getUid();
+        databaseReference.child(currentId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("name").exists()){
+                    Toast.makeText(MainActivity.this,"Welcome",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    SendUserSettingActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
+
 
     private void getFramgent(Fragment f){
         FragmentTransaction  fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -116,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_settings:
+                SendUserSettingActivity();
                 return true;
 
             case R.id.menu_Logout:
@@ -125,5 +152,19 @@ public class MainActivity extends AppCompatActivity {
 
             default: return false;
         }
+    }
+    private void SendUserToLoginActivity() {
+        Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
+    }
+
+
+    private void SendUserSettingActivity() {
+        Intent settingIntent = new Intent(MainActivity.this,SettingActivity.class);
+        settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(settingIntent);
+        finish();
     }
 }
