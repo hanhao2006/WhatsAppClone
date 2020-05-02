@@ -1,18 +1,24 @@
 package com.example.whatappclone;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
 //        id = mAuth.getCurrentUser().getUid();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         // set toolbar
         mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         chatsFragment = new ChatsFragment();
         groupsFragment = new GroupsFragment();
 
+        getFramgent(chatsFragment);
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.main_btnNavigation);
@@ -105,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         private void VerifyUserExistance() {
         final String currentId = mAuth.getCurrentUser().getUid();
-        databaseReference.child(currentId).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(currentId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child("name").exists()){
@@ -143,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_find_friends:
                 return true;
+            case R.id.menu_create_group:
+                RequestNewGroup();
+                return true;
 
             case R.id.menu_settings:
                 SendUserSettingActivity();
@@ -156,6 +166,48 @@ public class MainActivity extends AppCompatActivity {
             default: return false;
         }
     }
+
+    private void RequestNewGroup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog);
+        builder.setTitle("Enter Group Name");
+        final EditText groupName = new EditText(MainActivity.this);
+        groupName.setHint("e.g Cafe");
+        builder.setView(groupName);
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String groupNameGet = groupName.getText().toString();
+                if(TextUtils.isEmpty(groupNameGet)){
+                    Toast.makeText(MainActivity.this,"Please write Group name",Toast.LENGTH_SHORT).show();
+                }else{
+                    CreateNewGroup(groupNameGet);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void CreateNewGroup(final String groupNameGet ) {
+
+        databaseReference.child("Groups").child(groupNameGet).setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(MainActivity.this,groupNameGet + " is created successfully",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this,LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
