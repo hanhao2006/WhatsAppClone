@@ -1,5 +1,6 @@
 package com.example.whatappclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -50,6 +52,16 @@ public class GroupsFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("Groups");
         getGroup();
         Intialize();
+
+
+         // set group name to group chat activity
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String currentGroupName = parent.getItemAtPosition(position).toString();
+                startActivity(new Intent(getContext(),GroupChatActivity.class).putExtra("groupName",currentGroupName));
+            }
+        });
         return viewGroup;
     }
 
@@ -61,7 +73,6 @@ public class GroupsFragment extends Fragment {
     }
 
     private void getGroup() {
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -81,7 +92,10 @@ public class GroupsFragment extends Fragment {
 
             }
         });
-
     }
+
+
+
+
 
 }
