@@ -1,9 +1,12 @@
 package com.example.whatappclone;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -34,6 +43,10 @@ public class SettingActivity extends AppCompatActivity {
     private String cuurentUserId;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
+    private static final  int pick = 1;
+    private StorageReference UserProfileImage;
+    private ProgressDialog loginBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +55,7 @@ public class SettingActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         cuurentUserId = mAuth.getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        UserProfileImage = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
 
         Initialize();
@@ -54,6 +68,16 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         RetrieveUserInfo();
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                galleryIntent.setType("image/*");
+                startActivityForResult(galleryIntent,pick);
+            }
+        });
     }
 
 
@@ -64,8 +88,64 @@ public class SettingActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.setting_user_name);
         editTextUserStatus = findViewById(R.id.setting_profile_status);
         imageView = findViewById(R.id.set_profile_image);
+        loginBar = new ProgressDialog(this);
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == pick && resultCode == RESULT_OK && data!=null){
+            Uri imageUri = data.getData();
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1,1)
+                    .start(this);
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+           if(resultCode == RESULT_OK){
+               loginBar.setTitle("Set profile image");
+               loginBar.setMessage("Please waiting");
+               loginBar.setCanceledOnTouchOutside(false);
+               loginBar.show();;
+               Uri resultUri = result.getUri();
+               StorageReference filepath = UserProfileImage.child(cuurentUserId + ".jpg");
+               filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                       if(task.isSuccessful()){
+                           Toast.makeText(SettingActivity.this, "Profile image update", Toast.LENGTH_SHORT).show();
+                          final String downloadUrl = task.getResult().toString();
+                           Toast.makeText(SettingActivity.this, downloadUrl, Toast.LENGTH_SHORT).show();
+                           databaseReference.child("Users").child(cuurentUserId).child("image")
+                                   .setValue(downloadUrl)
+                                   .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                       @Override
+                                       public void onComplete(@NonNull Task<Void> task) {
+                                           if(task.isSuccessful()){
+                                               Toast.makeText(SettingActivity.this, "Image save in database successfully", Toast.LENGTH_SHORT).show();
+                                               loginBar.dismiss();
+                                           }else{
+                                               String message = task.getException().toString();
+                                               Toast.makeText(SettingActivity.this, "error" + message, Toast.LENGTH_SHORT).show();
+                                                loginBar.dismiss();
+                                           }
+                                       }
+                                   });
+
+                       }else{
+                           String message = task.getException().toString();
+                           Toast.makeText(SettingActivity.this, "Error" + message, Toast.LENGTH_SHORT).show();
+                            loginBar.dismiss();
+                       }
+                   }
+               });
+           }
+        }
+    }
+
     private void update() {
         String name = editTextUsername.getText().toString();
         String status = editTextUserStatus.getText().toString();
@@ -108,6 +188,8 @@ public class SettingActivity extends AppCompatActivity {
                             String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
                             editTextUsername.setText(retrieveName);
                             editTextUserStatus.setText(retrieveStatus);
+                            Picasso.get().load(retrieveProfileImage).into(imageView);
+
 
 
 

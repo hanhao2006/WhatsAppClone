@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         return false;
                 }
-
             }
         });
 
@@ -149,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_find_friends:
+                SendUserFindFrenidsActivity();
                 return true;
             case R.id.menu_create_group:
                 RequestNewGroup();
@@ -221,5 +221,10 @@ public class MainActivity extends AppCompatActivity {
         settingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(settingIntent);
         finish();
+    }
+    private void SendUserFindFrenidsActivity() {
+        Intent findFrenidsIntent = new Intent(MainActivity.this,FindFriendsActivity.class);
+        startActivity(findFrenidsIntent);
+
     }
 }
