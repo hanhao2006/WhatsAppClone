@@ -13,19 +13,23 @@
      android:id="@+id/appBarLayout"
      android:layout_width="match_parent"
      android:layout_height="wrap_content">
+
    <include
        android:id="@+id/main_page_toolbar"
        layout="@layout/app_bar_layout">
    </include>
 
-   <com.google.android.material.bottomnavigation.BottomNavigationView
-       android:id="@+id/main_btnNavigation"
-       android:layout_width="match_parent"
-       android:layout_height="50dp"
-       android:background="@color/colorPrimary"
-       app:itemTextColor="@android:color/white"
-       android:paddingBottom="10dp"
-       app:menu="@menu/main_menu" />
+     <com.google.android.material.bottomnavigation.BottomNavigationView
+         android:id="@+id/main_btnNavigation"
+         android:layout_width="match_parent"
+         android:layout_height="70dp"
+         android:background="@color/colorPrimary"
+         android:paddingBottom="10dp"
+         android:paddingTop="10dp"
+         app:itemTextColor="@android:color/white"
+         app:labelVisibilityMode="labeled"
+         app:itemIconTint="#fff"
+         app:menu="@menu/main_menu" />
 
  </com.google.android.material.appbar.AppBarLayout>
 

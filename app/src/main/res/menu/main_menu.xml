@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/mainChat"
-        android:title="Chat" />
+        android:icon="@drawable/chat"
+        android:title="Chat"
+       />
     <item android:id="@+id/mainGroup"
-        android:title="Group"/>
+        android:icon="@drawable/group"
+        android:title="Group"
+        />
     <item android:id="@+id/mainContact"
-        android:title="Contact"/>
+        android:icon="@drawable/contact"
+        android:title="Contact" />
+    <item android:id="@+id/mainRequest"
+        android:icon="@drawable/request"
+        android:title="Request"
+       />
 </menu>

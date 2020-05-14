@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ChatsFragment chatsFragment;
     private ContactsFragment contactsFragment;
     private GroupsFragment groupsFragment;
+    private RequestsFragment requestsFragment;
 
     // Firebase
     private FirebaseUser currentUser;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         contactsFragment = new ContactsFragment();
         chatsFragment = new ChatsFragment();
         groupsFragment = new GroupsFragment();
+        requestsFragment = new RequestsFragment();
 
         getFramgent(chatsFragment);
 
@@ -88,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.mainContact:
                         getFramgent(contactsFragment);
+                        return true;
+                    case R.id.mainRequest:
+                        getFramgent(requestsFragment);
                         return true;
                     default:
                         return false;

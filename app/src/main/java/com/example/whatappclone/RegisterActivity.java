@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                startActivity(mainIntent);
                                finish();
-
                                //Firebase
                                 String currentUserId = mAuth.getCurrentUser().getUid();
                                 databaseReference.child("Users").child(currentUserId).setValue("");

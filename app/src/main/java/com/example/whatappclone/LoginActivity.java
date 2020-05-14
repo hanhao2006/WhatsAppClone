@@ -132,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
             SendUserToMainActivity();
         }
 
-
     }
 
 }
