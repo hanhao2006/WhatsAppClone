@@ -3,6 +3,7 @@ package com.example.whatappclone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -46,6 +47,7 @@ public class SettingActivity extends AppCompatActivity {
     private static final  int pick = 1;
     private StorageReference UserProfileImage;
     private ProgressDialog loginBar;
+    private Toolbar settingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,11 @@ public class SettingActivity extends AppCompatActivity {
         editTextUserStatus = findViewById(R.id.setting_profile_status);
         imageView = findViewById(R.id.set_profile_image);
         loginBar = new ProgressDialog(this);
+        settingToolbar = findViewById(R.id.settings_toolbar);
+        setSupportActionBar(settingToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setTitle("Account Setting");
 
     }
 
@@ -156,11 +163,11 @@ public class SettingActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(status)){
             Toast.makeText(this,"Please Write your status",Toast.LENGTH_SHORT).show();
         }else{
-            HashMap<String,String> profileMap = new HashMap<>();
+            HashMap<String,Object> profileMap = new HashMap<>();
             profileMap.put("uid",cuurentUserId);
             profileMap.put("name",name);
             profileMap.put("status",status);
-            databaseReference.child("Users").child(cuurentUserId).setValue(profileMap)
+            databaseReference.child("Users").child(cuurentUserId).updateChildren(profileMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
