@@ -1,5 +1,6 @@
 package com.example.whatappclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,8 @@ public class ChatsFragment extends Fragment {
     private DatabaseReference databaseReference, userRef;
     private FirebaseAuth mAuth;
     private String currentUserId;
+
+
     public ChatsFragment() {
         // Required empty public constructor
     }
@@ -72,18 +75,36 @@ public class ChatsFragment extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Contacts model) {
                         final String userIds = getRef(position).getKey();
+                        final String[] uriImage = {"default_image"};
+
                         userRef.child(userIds).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.hasChild("image")){
-                                    final String uriImage= dataSnapshot.child("image").getValue().toString();
-                                    Picasso.get().load(uriImage).placeholder(R.drawable.profileimage).into(holder.profileImage);
+                              if(dataSnapshot.exists()){
 
-                                }
-                                final String userName = dataSnapshot.child("name").getValue().toString();
-                                final String userStatus = dataSnapshot.child("status").getValue().toString();
-                                holder.userName.setText(userName);
-                                holder.userStatus.setText("Last seen: " + "\n" + "Date " + " Time");
+                                  if(dataSnapshot.hasChild("image")){
+                                      uriImage[0] = dataSnapshot.child("image").getValue().toString();
+                                      Picasso.get().load(uriImage[0]).placeholder(R.drawable.profileimage).into(holder.profileImage);
+
+                                  }
+                                  final String userName = dataSnapshot.child("name").getValue().toString();
+                                  final String userStatus = dataSnapshot.child("status").getValue().toString();
+                                  holder.userName.setText(userName);
+                                  holder.userStatus.setText("Last seen: " + "\n" + "Date " + " Time");
+
+                                  holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                      @Override
+                                      public void onClick(View v) {
+
+                                          Intent intent = new Intent(getContext(),ChatActivity.class);
+                                          intent.putExtra("visit_user_Id",userIds);
+                                          intent .putExtra("visit_user_Name",userName);
+                                          intent.putExtra("visit_user_image", uriImage[0]);
+
+                                          startActivity(intent);
+                                      }
+                                  });
+                              }
                             }
 
                             @Override

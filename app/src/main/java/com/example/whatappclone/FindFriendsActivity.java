@@ -52,7 +52,7 @@ public class FindFriendsActivity extends AppCompatActivity {
         FirebaseRecyclerOptions<Contacts> options = new FirebaseRecyclerOptions.Builder<Contacts>()
                 .setQuery(databaseReference,Contacts.class)
                 .build();
-        FirebaseRecyclerAdapter<Contacts, FindFiredViewHolder> adapter = new FirebaseRecyclerAdapter<Contacts, FindFiredViewHolder>(options) {
+            FirebaseRecyclerAdapter<Contacts, FindFiredViewHolder> adapter = new FirebaseRecyclerAdapter<Contacts, FindFiredViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull FindFiredViewHolder holder, final int position, @NonNull Contacts model) {
                 holder.username.setText(model.getName());
