@@ -127,6 +127,8 @@ public class ChatActivity extends AppCompatActivity {
                         Messages messages = dataSnapshot.getValue(Messages.class);
                         messagesList.add(messages);
                         messageAdapter.notifyDataSetChanged();
+
+                        userMessageList.smoothScrollToPosition(userMessageList.getAdapter().getItemCount());
                     }
 
                     @Override
@@ -182,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
                         Toast.makeText(ChatActivity.this, "Try again", Toast.LENGTH_SHORT).show();
                     }
 
-    //               editTextMessageInput.setText("");
+                  editTextMessageInput.setText("");
                 }
             });
 
