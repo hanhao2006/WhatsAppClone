@@ -68,11 +68,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setTitle("WhatsAppClone");
 
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+        else{
+            VerifyUserExistance();
+        }
+
         // Fragment
         contactsFragment = new ContactsFragment();
         chatsFragment = new ChatsFragment();
         groupsFragment = new GroupsFragment();
         requestsFragment = new RequestsFragment();
+
 
         getFramgent(chatsFragment);
 
@@ -105,12 +113,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(currentUser == null){
-            SendUserToLoginActivity();
-        }
-        else{
-            VerifyUserExistance();
-        }
+
     }
 
         private void VerifyUserExistance() {
