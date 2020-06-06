@@ -111,15 +111,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/TextViewNeed_account_link"
-                android:text="or Login using your?"
+                android:text="or Login using your"
                 android:padding="4dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="23dp"
                 android:textAlignment="center"
-                android:textSize="17sp"
+                android:textSize="10sp"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:textColor="@color/colorPrimary"/>
 
 
             <Button
