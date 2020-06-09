@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.whatappclone.corona.CoronaMainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -160,11 +161,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_create_group:
                 RequestNewGroup();
                 return true;
-
+            case R.id.menu_corona:
+                SendUserToGetChart();
+                return true;
             case R.id.menu_settings:
                 SendUserSettingActivity();
                 return true;
-
             case R.id.menu_Logout:
                 mAuth.signOut();
                 SendUserToLoginActivity();
@@ -232,5 +234,8 @@ public class MainActivity extends AppCompatActivity {
         Intent findFrenidsIntent = new Intent(MainActivity.this,FindFriendsActivity.class);
         startActivity(findFrenidsIntent);
 
+    }
+    private void SendUserToGetChart(){
+        startActivity(new Intent(MainActivity.this, CoronaMainActivity.class));
     }
 }

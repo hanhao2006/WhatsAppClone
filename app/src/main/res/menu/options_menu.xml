@@ -6,6 +6,9 @@
         app:showAsAction="never"/>
     <item android:id="@+id/menu_create_group"
         android:title="Create Group"/>
+    <item android:id="@+id/menu_corona"
+        android:title="News of Corona">
+    </item>
     <item android:id="@+id/menu_settings"
         android:title="Settings"
         app:showAsAction="never"/>
