@@ -29,6 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
+
+    private String currentUserId;
 
 
 
@@ -69,12 +75,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setTitle("WhatsAppClone");
 
-        if(currentUser == null){
-            SendUserToLoginActivity();
-        }
-        else{
-            VerifyUserExistance();
-        }
+
+
+
 
         // Fragment
         contactsFragment = new ContactsFragment();
@@ -84,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         getFramgent(chatsFragment);
+
+        if(currentUser == null){
+            SendUserToLoginActivity();
+        }
+        else{
+           //updateUserStatus("Online");
+            VerifyUserExistance();
+        }
 
         // bottom navigation
         bottomNavigationView = findViewById(R.id.main_btnNavigation);
@@ -115,9 +126,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
+
     }
 
-        private void VerifyUserExistance() {
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//        if(currentUser !=null){
+//            updateUserStatus("OffLine");
+//        }
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        if(currentUser !=null){
+//            updateUserStatus("OffLine");
+//        }
+//    }
+
+    private void VerifyUserExistance() {
         final String currentId = mAuth.getCurrentUser().getUid();
         databaseReference.child("Users").child(currentId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -238,4 +269,25 @@ public class MainActivity extends AppCompatActivity {
     private void SendUserToGetChart(){
         startActivity(new Intent(MainActivity.this, CoronaMainActivity.class));
     }
+
+//    private  void updateUserStatus(String state){
+//        String saveCurrentTime, saveCurrentDate;
+//
+//        Calendar calendar = Calendar.getInstance();
+//        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+//        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+//        saveCurrentDate = currentDate.format(calendar.getTime());
+//        saveCurrentTime = currentTime.format(calendar.getTime());
+//
+//        HashMap<String, Object> onlineStateMap = new HashMap<>();
+//        onlineStateMap.put("time",saveCurrentTime);
+//        onlineStateMap.put("date",saveCurrentDate);
+//        onlineStateMap.put("state",state);
+//
+//        currentUserId = mAuth.getCurrentUser().getUid();
+//
+//        databaseReference.child("Users").child(currentUserId).child("userState")
+//                .updateChildren(onlineStateMap);
+//
+//    }
 }
