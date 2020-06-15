@@ -57,10 +57,10 @@ public class CoronaMainActivity extends AppCompatActivity {
 
                     ArrayList<PieEntry> pieEntries = new ArrayList<>();
                     pieEntries.add(new PieEntry(affectedCountries,"Affected Countries"));
-                    pieEntries.add(new PieEntry(cases,"Cases"));
-                    pieEntries.add(new PieEntry(recovered,"Recovered"));
-//                    pieEntries.add(new PieEntry(todayCases,"Today Cases"));
-//                    pieEntries.add(new PieEntry(todayDeaths,"Today Deaths"));
+          //          pieEntries.add(new PieEntry(cases,"Cases"));
+             //       pieEntries.add(new PieEntry(recovered,"Recovered"));
+                   pieEntries.add(new PieEntry(todayCases,"Today Cases"));
+        //           pieEntries.add(new PieEntry(todayDeaths,"Today Deaths"));
 
 
                     PieDataSet pieDataSet = new PieDataSet(pieEntries,"Statistics");

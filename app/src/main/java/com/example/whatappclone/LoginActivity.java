@@ -104,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this,"Please enter password",Toast.LENGTH_LONG).show();
         }else{
-            loadingBar.setTitle("Sign In");
-            loadingBar.setMessage("Please waiting");
-            loadingBar.setCanceledOnTouchOutside(true);
-            loadingBar.show();
+//            loadingBar.setTitle("Sign In");
+//            loadingBar.setMessage("Please waiting");
+//            loadingBar.setCanceledOnTouchOutside(true);
+//            loadingBar.show();
 
             mAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 if(task.isSuccessful()){
                                                     SendUserToMainActivity();
                                                     Toast.makeText(LoginActivity.this,"Logged in Successful...",Toast.LENGTH_SHORT).show();
-                                                    loadingBar.dismiss();
+                                                 //   loadingBar.dismiss();
                                                 }
                                             }
                                         });

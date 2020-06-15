@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // set toolbar
         mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mainToolbar);
-        getSupportActionBar().setTitle("WhatsAppClone");
+        getSupportActionBar().setTitle("Online Chat");
 
 
 
