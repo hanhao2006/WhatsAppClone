@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
 
-    private String currentUserId;
+    private String name;
+
 
 
 
@@ -70,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        // set toolbar
-        mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
-        setSupportActionBar(mainToolbar);
-        getSupportActionBar().setTitle("Online Chat");
+//        // set toolbar
+//        mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
+//        setSupportActionBar(mainToolbar);
+//        getSupportActionBar().setTitle("Online Chat" + name);
 
 
 
@@ -154,7 +155,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child("name").exists()){
-                    Toast.makeText(MainActivity.this,"Welcome",Toast.LENGTH_LONG).show();
+                  name  = dataSnapshot.child("name").getValue().toString();
+                  name = name.toUpperCase();
+                    // set toolbar
+                    mainToolbar = (Toolbar)findViewById(R.id.main_page_toolbar);
+                    setSupportActionBar(mainToolbar);
+                    getSupportActionBar().setTitle("Online Chat " + name);
+
+                    Toast.makeText(MainActivity.this,"Welcome " + name ,Toast.LENGTH_LONG).show();
                 }
                 else{
                     SendUserSettingActivity();
