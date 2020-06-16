@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
-        SendUserToMainActivity();
+        //SendUserToMainActivity();
 
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this,"Please enter email",Toast.LENGTH_LONG).show();
@@ -104,10 +104,11 @@ public class LoginActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this,"Please enter password",Toast.LENGTH_LONG).show();
         }else{
-//            loadingBar.setTitle("Sign In");
-//            loadingBar.setMessage("Please waiting");
-//            loadingBar.setCanceledOnTouchOutside(true);
-//            loadingBar.show();
+            loadingBar = new ProgressDialog(LoginActivity.this);
+            loadingBar.setTitle("Sign In");
+            loadingBar.setMessage("Please waiting");
+            loadingBar.setCanceledOnTouchOutside(true);
+            loadingBar.show();
 
             mAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -126,7 +127,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 if(task.isSuccessful()){
                                                     SendUserToMainActivity();
                                                     Toast.makeText(LoginActivity.this,"Logged in Successful...",Toast.LENGTH_SHORT).show();
-                                                 //   loadingBar.dismiss();
+                                                    if(loadingBar !=null && loadingBar.isShowing()){
+                                                        loadingBar.dismiss();
+                                                    }
+
                                                 }
                                             }
                                         });
@@ -134,7 +138,9 @@ public class LoginActivity extends AppCompatActivity {
                             }else{
                                 String errorMessage = task.getException().toString();
                                 Toast.makeText(LoginActivity.this, "Error" + errorMessage,Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
+                                if(loadingBar !=null && loadingBar.isShowing()){
+                                    loadingBar.dismiss();
+                                }
                             }
                         }
                     });
@@ -165,4 +171,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(loadingBar !=null){
+            loadingBar.dismiss();
+            loadingBar = null;
+        }
+    }
 }
